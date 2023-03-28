@@ -1,6 +1,5 @@
 package com.sultonbek1547.chatapprealtime.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,10 +7,9 @@ import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.databinding.ItemReceivedMessageBinding
 import com.sultonbek1547.chatapprealtime.databinding.ItemSentMessageBinding
 import com.sultonbek1547.chatapprealtime.models.Message
-import com.sultonbek1547.chatapprealtime.utils.MyData.chatReference
-import com.sultonbek1547.chatapprealtime.utils.MyData.screenLengthItem
+import com.sultonbek1547.chatapprealtime.utils.MyData
 
-class ChatAdapter(val messageList: ArrayList<Message>, private val senderId: String) :
+class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val SENT_MESSAGE = 1
@@ -65,7 +63,7 @@ class ChatAdapter(val messageList: ArrayList<Message>, private val senderId: Str
             // Bind the sent message data to the views in the sent message layout using view binding
             binding.tvMessage.text = message.message
             binding.tvMessageContent.text = message.date
-            binding.tvMessage.maxWidth = screenLengthItem
+            binding.tvMessage.maxWidth = MyData.screenLengthItem
             if (message.statusRead == "true") {
                 binding.imgMessageStatus.setImageResource(R.drawable.double_checkmark)
             }else{
@@ -82,7 +80,7 @@ class ChatAdapter(val messageList: ArrayList<Message>, private val senderId: Str
             binding.tvMessageContent.text = message.date
             if (message.statusRead != "true") {
                 message.statusRead = "true"
-                chatReference!!.child(message.id!!).setValue(message)
+//                MyData.chatReference!!.child(message.id!!).setValue(message)
             }
 
         }

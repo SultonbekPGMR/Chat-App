@@ -21,6 +21,11 @@ import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.databinding.FragmentAuthBinding
 import com.sultonbek1547.chatapprealtime.models.User
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
+import com.sultonbek1547.chatapprealtime.utils.MyData.savedMessages
+import java.text.SimpleDateFormat
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class AuthFragment : Fragment() {
@@ -52,11 +57,15 @@ class AuthFragment : Fragment() {
                 auth.uid,
                 auth.currentUser?.displayName,
                 auth.currentUser?.photoUrl.toString(),
-                auth.currentUser?.email
+                auth.currentUser?.email,
+                SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()),
+                "true"
             )
+            reference.child(auth.uid!!).setValue(USER)
+
 
             findNavController().navigate(
-                R.id.usersFragment,
+                R.id.homeFragment,
                 null,
                 NavOptions.Builder()
                     .setPopUpTo(findNavController().currentDestination?.id ?: 0, true).build()
@@ -96,21 +105,16 @@ class AuthFragment : Fragment() {
             if (it.isSuccessful) {
                 Log.d("TAG", "fireBaseAuthWithGoogle: Sign in with credential SUCCESSFUL")
                 val user = auth.currentUser
-                reference.child(auth.uid!!)
-                    .setValue(
-                        User(
-                            auth.uid,
-                            user?.displayName,
-                            user?.photoUrl.toString(),
-                            auth.currentUser?.email
-                        )
-                    )
-                Toast.makeText(context, "${user?.displayName}", Toast.LENGTH_SHORT).show()
                 USER = User(
-                    auth.uid, user?.displayName, user?.photoUrl.toString(), auth.currentUser?.email
+                    auth.uid, user?.displayName, user?.photoUrl.toString(), auth.currentUser?.email,
+                    SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()),
+                    "true"
                 )
+                reference.child(auth.uid!!).setValue(USER)
+                 Toast.makeText(context, "${user?.displayName}", Toast.LENGTH_SHORT).show()
+
                 findNavController().navigate(
-                    R.id.usersFragment,
+                    R.id.homeFragment,
                     null,
                     NavOptions.Builder()
                         .setPopUpTo(findNavController().currentDestination?.id ?: 0, true).build()

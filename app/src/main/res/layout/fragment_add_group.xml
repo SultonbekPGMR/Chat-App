@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#06233A"
+
+    android:orientation="vertical"
+    tools:context=".fragments.AddGroupFragment">
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:textColorHint="@color/transparent"
+        android:layout_height="wrap_content"
+        android:hint="Enter group name.."
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add people "
+        android:textColor="@color/blue"
+        android:textStyle="normal"
+        android:textSize="18sp"
+        android:gravity="center" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:listitem="@layout/rv_item"
+        android:clickable="true"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:focusable="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_new_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/baseline_check_24"
+        android:backgroundTint="@color/blue"
+        app:borderWidth="0dp"
+        app:tint="@color/white"
+        android:padding="0dp"
+        android:layout_margin="10dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

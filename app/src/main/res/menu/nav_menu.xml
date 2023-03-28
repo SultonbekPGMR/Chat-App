@@ -7,6 +7,11 @@
             android:id="@+id/menu_saved_messages"
             android:icon="@drawable/baseline_bookmark_border_24"
             android:title="Saved Messages" />
+            <item
+            android:id="@+id/menu_add_group"
+            android:icon="@drawable/baseline_group_24"
+            android:title="New Group" />
+
         <item
             android:id="@+id/menu_settings"
             android:icon="@drawable/baseline_settings_24"

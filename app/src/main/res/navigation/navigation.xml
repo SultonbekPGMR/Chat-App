@@ -10,9 +10,23 @@
         android:name="com.sultonbek1547.chatapprealtime.fragments.AuthFragment"
         android:label="fragment_auth"
         tools:layout="@layout/fragment_auth" >
-        <action
-            android:id="@+id/action_authFragment_to_usersFragment"
-            app:destination="@id/usersFragment" />
+        </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.sultonbek1547.chatapprealtime.fragments.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/addGroupFragment"
+        android:name="com.sultonbek1547.chatapprealtime.fragments.AddGroupFragment"
+        android:label="fragment_add_group"
+        tools:layout="@layout/fragment_add_group" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.sultonbek1547.chatapprealtime.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
     </fragment>
     <fragment
         android:id="@+id/usersFragment"
@@ -24,8 +38,17 @@
             app:destination="@id/chatFragment" />
     </fragment>
     <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.sultonbek1547.chatapprealtime.fragments.ChatFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        android:id="@+id/groupsFragment"
+        android:name="com.sultonbek1547.chatapprealtime.fragments.GroupsFragment"
+        android:label="fragment_groups"
+        tools:layout="@layout/fragment_groups" >
+        <action
+            android:id="@+id/action_groupsFragment_to_groupChatFragment"
+            app:destination="@id/groupChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupChatFragment"
+        android:name="com.sultonbek1547.chatapprealtime.fragments.GroupChatFragment"
+        android:label="fragment_group_chat"
+        tools:layout="@layout/fragment_group_chat" />
 </navigation>

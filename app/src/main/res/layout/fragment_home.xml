@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/drawer_layout"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#06233A"
+    tools:context=".fragments.HomeFragment">
+
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#011627"
+        android:elevation="3dp"
+        app:navigationIcon="@drawable/baseline_menu_24"
+        app:menu="@menu/menu"
+        app:title="Chat App"
+        app:titleTextColor="@color/white" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/my_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicator="@null"
+        app:tabSelectedTextColor="@color/blue"
+        app:tabTextColor="@color/white"
+        app:tabMode="auto"
+        app:tabPadding="10dp"
+        android:background="#011627" />
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/my_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/my_nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#152C3F"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_layout"
+        app:itemIconTint="#008FF1"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/nav_menu" />
+</androidx.drawerlayout.widget.DrawerLayout >
