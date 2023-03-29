@@ -8,39 +8,47 @@
     android:background="#06233A"
     tools:context=".fragments.HomeFragment">
 
-<androidx.appcompat.widget.LinearLayoutCompat
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#011627"
-        android:elevation="3dp"
-        app:navigationIcon="@drawable/baseline_menu_24"
-        app:menu="@menu/menu"
-        app:title="Chat App"
-        app:titleTextColor="@color/white" />
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/my_tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabIndicator="@null"
-        app:tabSelectedTextColor="@color/blue"
-        app:tabTextColor="@color/white"
-        app:tabMode="auto"
-        app:tabPadding="10dp"
-        android:background="#011627" />
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/my_view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#011627"
+            android:elevation="3dp"
+            app:navigationIcon="@drawable/baseline_menu_24"
+            app:menu="@menu/menu"
+            app:title="Chat App"
+            app:titleTextColor="@color/white" />
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/my_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="3dp"
+            android:background="#011627"
+            app:tabIndicatorAnimationMode="elastic"
+            app:tabIndicatorGravity="bottom"
+            app:tabMode="fixed"
+            app:tabIndicatorColor="@color/blue"
+            app:tabIndicatorHeight="3.5dp"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicator="@drawable/indicator"
+            app:tabSelectedTextColor="@color/blue"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            app:tabTextColor="@color/transparent"
+            tools:ignore="SpeakableTextPresentCheck" />
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/my_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <com.google.android.material.navigation.NavigationView
@@ -54,4 +62,4 @@
         app:itemIconTint="#008FF1"
         app:itemTextColor="@color/white"
         app:menu="@menu/nav_menu" />
-</androidx.drawerlayout.widget.DrawerLayout >
+</androidx.drawerlayout.widget.DrawerLayout>

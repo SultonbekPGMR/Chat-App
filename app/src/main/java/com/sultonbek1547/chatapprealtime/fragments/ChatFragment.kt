@@ -2,9 +2,12 @@ package com.sultonbek1547.chatapprealtime.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -28,7 +31,7 @@ import kotlin.math.roundToInt
 
 
 class ChatFragment : Fragment() {
-    private val binding by lazy { FragmentChatBinding.inflate(layoutInflater) }
+    private lateinit var binding: FragmentChatBinding
     private lateinit var databse: FirebaseDatabase
     private lateinit var reference: DatabaseReference
     private lateinit var user: User
@@ -37,9 +40,19 @@ class ChatFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-
+        binding = FragmentChatBinding.inflate(layoutInflater, container, false)
+        binding.btnSend.visibility = View.GONE
+        binding.tvUserStatusTime.visibility = View.INVISIBLE
+        binding.edtMessage.isActivated = true
+        binding.edtMessage.isPressed = true
+        binding.edtMessage.requestFocus()
         init()
-
+        Handler().postDelayed({
+            if (binding.progressBar.visibility == View.VISIBLE) {
+                binding.progressBar.visibility = View.INVISIBLE
+                Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
+            }
+        },3000)
         binding.btnSend.setOnClickListener {
             val edtMessage = binding.edtMessage.text.toString().trim()
             if (edtMessage.isNotEmpty()) {
@@ -54,10 +67,10 @@ class ChatFragment : Fragment() {
             .addValueEventListener(
                 object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                     if (USER.uid === user.uid) {
-                         binding.tvUserStatusTime.text =  ""
-                         return
+                        if (USER.uid === user.uid) {
+                            return
                         }
+                        binding.tvUserStatusTime.visibility = View.VISIBLE
                         if (snapshot.getValue(User::class.java)?.isOnline == "true") {
                             binding.tvUserStatusTime.text = "online"
                             binding.tvUserStatusTime.setTextColor(Color.parseColor("#008FF1"))
@@ -80,7 +93,6 @@ class ChatFragment : Fragment() {
     private fun init() {
         user = arguments?.getSerializable("user") as User
         binding.tvUserName.text = user.name
-        binding.tvUserStatusTime.text = "last seen at " + user.statusTime
 
         if (user.name == "Saved Messages") {
             binding.userImage.setImageResource(R.drawable.baseline_bookmark_border_24)
@@ -89,7 +101,7 @@ class ChatFragment : Fragment() {
             var padding = 20
             padding = padding.dpToPx(5)
             binding.userImage.setPadding(padding, padding, padding, padding)
-
+            binding.tvUserStatusTime.text = "last seen at " + user.statusTime
         }
 
         databse = FirebaseDatabase.getInstance()
@@ -124,6 +136,18 @@ class ChatFragment : Fragment() {
             )
         }
 
+
+        binding.edtMessage.addTextChangedListener {
+            if (it != null) {
+                if (it.isEmpty()) {
+                    binding.btnSend.visibility = View.GONE
+                } else {
+                    binding.btnSend.visibility = View.VISIBLE
+                }
+            }
+        }
+
+
     }
 
     private fun getMessageList() {
@@ -134,7 +158,9 @@ class ChatFragment : Fragment() {
                 )
                 chatAdapter.notifyItemInserted(chatAdapter.itemCount - 1)
                 binding.myRv.scrollToPosition(chatAdapter.itemCount - 1)
-
+                if (binding.progressBar.visibility == View.VISIBLE) {
+                    binding.progressBar.visibility = View.INVISIBLE
+                }
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {

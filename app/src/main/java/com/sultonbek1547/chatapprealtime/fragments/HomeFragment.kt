@@ -20,8 +20,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.adapters.ViewPagerAdapter
 import com.sultonbek1547.chatapprealtime.databinding.FragmentHomeBinding
+import com.sultonbek1547.chatapprealtime.models.Group
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
 import com.sultonbek1547.chatapprealtime.utils.MyData.savedMessages
+import com.sultonbek1547.chatapprealtime.utils.MyData.userList
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,19 +31,20 @@ import java.util.*
 class HomeFragment : Fragment() {
 
 
-    private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
+    private lateinit var binding:FragmentHomeBinding
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         init()
 
         return binding.root
     }
 
     private fun init() {
-        viewPagerAdapter = ViewPagerAdapter(requireActivity())
+        viewPagerAdapter = ViewPagerAdapter(childFragmentManager,lifecycle)
         binding.myViewPager.adapter = viewPagerAdapter
 
         TabLayoutMediator(binding.myTabLayout, binding.myViewPager) { tab, position ->
@@ -104,7 +107,7 @@ class HomeFragment : Fragment() {
 
                 }
                 R.id.menu_saved_messages -> {
-                    findNavController().navigate(R.id.chatFragment, bundleOf("user" to savedMessages))
+                    findNavController().navigate(R.id.chatFragment, bundleOf("user" to userList[0]))
                 }
 
             }
@@ -113,6 +116,8 @@ class HomeFragment : Fragment() {
         }
 
     }
+
+
 
 
 }

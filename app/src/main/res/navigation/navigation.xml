@@ -27,25 +27,15 @@
         android:name="com.sultonbek1547.chatapprealtime.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
-    </fragment>
-    <fragment
-        android:id="@+id/usersFragment"
-        android:name="com.sultonbek1547.chatapprealtime.fragments.UsersFragment"
-        android:label="fragment_users"
-        tools:layout="@layout/fragment_users" >
         <action
-            android:id="@+id/action_usersFragment_to_chatFragment"
+            android:id="@+id/action_homeFragment_to_addGroupFragment"
+            app:destination="@id/addGroupFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/groupsFragment"
-        android:name="com.sultonbek1547.chatapprealtime.fragments.GroupsFragment"
-        android:label="fragment_groups"
-        tools:layout="@layout/fragment_groups" >
-        <action
-            android:id="@+id/action_groupsFragment_to_groupChatFragment"
-            app:destination="@id/groupChatFragment" />
-    </fragment>
+
+
     <fragment
         android:id="@+id/groupChatFragment"
         android:name="com.sultonbek1547.chatapprealtime.fragments.GroupChatFragment"

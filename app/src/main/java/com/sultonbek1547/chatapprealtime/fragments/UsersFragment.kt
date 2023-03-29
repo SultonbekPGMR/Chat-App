@@ -32,7 +32,7 @@ import kotlin.collections.ArrayList
 
 class UsersFragment : Fragment() {
 
-    private val binding by lazy { FragmentUsersBinding.inflate(layoutInflater) }
+    private lateinit var binding:FragmentUsersBinding
     private lateinit var databse: FirebaseDatabase
     private lateinit var reference: DatabaseReference
     private lateinit var usersAdapter: UsersAdapter
@@ -40,6 +40,7 @@ class UsersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        binding = FragmentUsersBinding.inflate(layoutInflater, container, false)
 
         databse = FirebaseDatabase.getInstance()
         reference = databse.getReference("users")
@@ -66,6 +67,7 @@ class UsersFragment : Fragment() {
                     )
                 }
                 binding.myRv.adapter = usersAdapter
+                binding.progressBar.visibility = View.INVISIBLE
 
             }
 

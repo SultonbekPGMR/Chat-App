@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -22,9 +23,8 @@ import com.sultonbek1547.chatapprealtime.utils.MyData.userList
 
 class AddGroupFragment : Fragment() {
 
-    private val binding by lazy { FragmentAddGroupBinding.inflate(layoutInflater) }
+    private lateinit var binding:FragmentAddGroupBinding
     private lateinit var addGroupAdapter: AddGroupAdapter
-    private lateinit var auth: FirebaseAuth
     private lateinit var reference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private var listOfSelectedUserIds = ArrayList<String>()
@@ -32,11 +32,14 @@ class AddGroupFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        binding = FragmentAddGroupBinding.inflate(layoutInflater, container, false)
+
         database = FirebaseDatabase.getInstance()
         reference = database.getReference("groups")
         listOfSelectedUserIds.add(USER.uid!!)
-
-        addGroupAdapter = AddGroupAdapter(userList){
+        val members = userList
+        members.removeAt(0)
+        addGroupAdapter = AddGroupAdapter(members){
                 user: User, boolean: Boolean ->
             listItemSelectedOrUnselected(
                 user,
@@ -50,8 +53,15 @@ class AddGroupFragment : Fragment() {
             if (binding.edtName.text.toString().trim().isNotEmpty()) {
                 binding.btnAddNewGroup.isEnabled = false
                 addNewGroup(binding.edtName.text.toString().trim())
+            }else{
+                Toast.makeText(context, "Enter Group name", Toast.LENGTH_SHORT).show()
             }
 
+        }
+
+
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
         }
 
         return binding.root
@@ -63,6 +73,7 @@ class AddGroupFragment : Fragment() {
         group.id = key
         group.name = name
         group.listMessages = ArrayList<Message>().toString()
+        group.groupMemberCount = listOfSelectedUserIds.size.toString()
 
         var id = ""
         listOfSelectedUserIds.forEach {

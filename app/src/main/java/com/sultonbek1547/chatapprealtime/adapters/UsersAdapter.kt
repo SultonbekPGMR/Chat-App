@@ -9,7 +9,7 @@ import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.databinding.RvItemBinding
 import com.sultonbek1547.chatapprealtime.models.User
 
-class UsersAdapter(val list: ArrayList<User>, val function: (User, Int) -> Unit) :
+class UsersAdapter(private val  list: ArrayList<User>, val function: (User, Int) -> Unit) :
     RecyclerView.Adapter<UsersAdapter.Vh>() {
 
     inner class Vh(private val itemRvBinding: RvItemBinding) :

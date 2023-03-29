@@ -1,16 +1,17 @@
 package com.sultonbek1547.chatapprealtime.fragments
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.adapters.GroupChatAdapter
 import com.sultonbek1547.chatapprealtime.databinding.FragmentGroupChatBinding
 import com.sultonbek1547.chatapprealtime.models.Group
@@ -28,7 +29,7 @@ import java.util.*
 class GroupChatFragment : Fragment() {
 
 
-    private val binding by lazy { FragmentGroupChatBinding.inflate(layoutInflater) }
+    private lateinit var binding: FragmentGroupChatBinding
     private lateinit var database: FirebaseDatabase
     private lateinit var reference: DatabaseReference
     private lateinit var group: Group
@@ -37,11 +38,26 @@ class GroupChatFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        binding = FragmentGroupChatBinding.inflate(layoutInflater, container, false)
+        binding.btnSend.visibility = View.GONE
+        binding.edtMessage.isActivated = true
+        binding.edtMessage.isPressed = true
+        binding.edtMessage.requestFocus()
         init()
+
+        Handler().postDelayed({
+            if (binding.progressBar.visibility == View.VISIBLE) {
+                binding.progressBar.visibility = View.INVISIBLE
+                Toast.makeText(context, "No data found", Toast.LENGTH_SHORT).show()
+            }
+        }, 3000)
 
 
         binding.btnSend.setOnClickListener {
-            sendMessage(binding.edtMessage.text.toString())
+            val edtMessage = binding.edtMessage.text.toString().trim()
+            if (edtMessage.isNotEmpty()) {
+                sendMessage(edtMessage)
+            }
         }
 
         return binding.root
@@ -49,8 +65,8 @@ class GroupChatFragment : Fragment() {
 
     private fun init() {
         group = arguments?.getSerializable("group") as Group
-        binding.tvUserName.text = group.name
-        //binding.tvUserStatusTime.text = "last seen at " + user.statusTime
+        binding.tvGroupName.text = group.name
+        binding.tvGroupMemberCount.text = group.groupMemberCount + " members"
         //Glide.with(binding.toolbar.context).load(user.imageLink).into(binding.userImage)
 
         database = FirebaseDatabase.getInstance()
@@ -71,12 +87,17 @@ class GroupChatFragment : Fragment() {
 
 
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigate(
-                R.id.homeFragment,
-                null,
-                NavOptions.Builder()
-                    .setPopUpTo(findNavController().currentDestination?.id ?: 0, true).build()
-            )
+            findNavController().popBackStack()
+        }
+
+        binding.edtMessage.addTextChangedListener {
+            if (it != null) {
+                if (it.isEmpty()) {
+                    binding.btnSend.visibility = View.GONE
+                } else {
+                    binding.btnSend.visibility = View.VISIBLE
+                }
+            }
         }
 
     }
@@ -86,12 +107,18 @@ class GroupChatFragment : Fragment() {
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val group = snapshot.getValue(Group::class.java)
-
                 val gson = Gson()
                 val listType = object : TypeToken<ArrayList<Message>>() {}.type
                 val list: ArrayList<Message> = gson.fromJson(group?.listMessages, listType)
                 groupChatAdapter.messageList = list
                 groupChatAdapter.notifyDataSetChanged()
+                if (list.size > 0){
+                    binding.myRv.scrollToPosition(list.size - 1)
+
+                    if (binding.progressBar.visibility == View.VISIBLE ) {
+                        binding.progressBar.visibility = View.INVISIBLE
+                    }
+                }
 
             }
 
@@ -132,5 +159,6 @@ class GroupChatFragment : Fragment() {
 
 
     }
+
 
 }

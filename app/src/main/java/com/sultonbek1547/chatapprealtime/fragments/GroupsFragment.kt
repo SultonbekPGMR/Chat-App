@@ -11,6 +11,7 @@ import com.google.firebase.database.*
 import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.adapters.GroupAdapter
 import com.sultonbek1547.chatapprealtime.databinding.FragmentGroupsBinding
+import com.sultonbek1547.chatapprealtime.databinding.FragmentHomeBinding
 import com.sultonbek1547.chatapprealtime.models.Group
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
 
@@ -18,14 +19,17 @@ import com.sultonbek1547.chatapprealtime.utils.MyData.USER
 class GroupsFragment : Fragment() {
 
 
-    private val binding by lazy { FragmentGroupsBinding.inflate(layoutInflater) }
+    private lateinit var binding: FragmentGroupsBinding
     private lateinit var databse: FirebaseDatabase
     private lateinit var reference: DatabaseReference
     private lateinit var groupAdapter: GroupAdapter
+    private val homeFragment = HomeFragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        binding = FragmentGroupsBinding.inflate(layoutInflater, container, false)
+
         databse = FirebaseDatabase.getInstance()
         reference = databse.getReference("groups")
 
@@ -47,6 +51,7 @@ class GroupsFragment : Fragment() {
                     )
                 }
                 binding.myRv.adapter = groupAdapter
+                binding.progressBar.visibility = View.INVISIBLE
 
             }
 
@@ -57,6 +62,9 @@ class GroupsFragment : Fragment() {
 
 
 
+        binding.btnAddNewGroup.setOnClickListener {
+            findNavController().navigate(R.id.addGroupFragment)
+        }
         return binding.root
     }
 

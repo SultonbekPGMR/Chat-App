@@ -3,11 +3,14 @@ package com.sultonbek1547.chatapprealtime.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.databinding.ItemReceivedMessageBinding
+import com.sultonbek1547.chatapprealtime.databinding.ItemReceivedMessageGroupBinding
 import com.sultonbek1547.chatapprealtime.databinding.ItemSentMessageBinding
 import com.sultonbek1547.chatapprealtime.models.Message
 import com.sultonbek1547.chatapprealtime.utils.MyData
+import com.sultonbek1547.chatapprealtime.utils.MyData.getSenderUser
 
 class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -23,7 +26,7 @@ class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId
                 SentMessageViewHolder(binding)
             }
             RECEIVED_MESSAGE -> {
-                val binding = ItemReceivedMessageBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemReceivedMessageGroupBinding.inflate(layoutInflater, parent, false)
                 ReceivedMessageViewHolder(binding)
             }
             else -> throw IllegalArgumentException("Invalid view type")
@@ -72,12 +75,16 @@ class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId
         }
     }
 
-    class ReceivedMessageViewHolder(private val binding: ItemReceivedMessageBinding) :
+    class ReceivedMessageViewHolder(private val binding: ItemReceivedMessageGroupBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(message: Message) {
             // Bind the received message data to the views in the received message layout using view binding
-            binding.tvMessage.text = message.message
+            binding.tvMessage.text   = message.message
             binding.tvMessageContent.text = message.date
+            val user = getSenderUser(message.senderId!!)
+            Glide.with(itemView.context).load(user.imageLink).into(binding.userImage)
+            binding.tvUserName.text = user.name
+
             if (message.statusRead != "true") {
                 message.statusRead = "true"
 //                MyData.chatReference!!.child(message.id!!).setValue(message)
