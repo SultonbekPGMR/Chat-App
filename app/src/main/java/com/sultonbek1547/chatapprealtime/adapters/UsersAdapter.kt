@@ -24,7 +24,9 @@ class UsersAdapter(private val  list: ArrayList<User>, val function: (User, Int)
                 return
             }
             itemRvBinding.tvName.text = user.name
-            Glide.with(itemView.context).load(user.imageLink).into(itemRvBinding.image)
+            Glide.with(itemView.context)
+                .load(user.imageLink)
+                .into(itemRvBinding.image)
 
             if (user.isOnline == "true") {
                 itemRvBinding.onlineImage.visibility = View.VISIBLE

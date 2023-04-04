@@ -8,14 +8,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.adapters.AddGroupAdapter
 import com.sultonbek1547.chatapprealtime.databinding.FragmentAddGroupBinding
 import com.sultonbek1547.chatapprealtime.models.Group
-import com.sultonbek1547.chatapprealtime.models.Message
+import com.sultonbek1547.chatapprealtime.models.MessageText
 import com.sultonbek1547.chatapprealtime.models.User
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
 import com.sultonbek1547.chatapprealtime.utils.MyData.userList
@@ -72,7 +71,7 @@ class AddGroupFragment : Fragment() {
         val group = Group()
         group.id = key
         group.name = name
-        group.listMessages = ArrayList<Message>().toString()
+        group.listMessages = ArrayList<MessageText>().toString()
         group.groupMemberCount = listOfSelectedUserIds.size.toString()
 
         var id = ""

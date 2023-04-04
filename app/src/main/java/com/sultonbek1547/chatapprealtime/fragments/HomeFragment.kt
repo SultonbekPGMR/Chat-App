@@ -20,10 +20,11 @@ import com.google.firebase.database.FirebaseDatabase
 import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.adapters.ViewPagerAdapter
 import com.sultonbek1547.chatapprealtime.databinding.FragmentHomeBinding
-import com.sultonbek1547.chatapprealtime.models.Group
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
-import com.sultonbek1547.chatapprealtime.utils.MyData.savedMessages
 import com.sultonbek1547.chatapprealtime.utils.MyData.userList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,7 +32,7 @@ import java.util.*
 class HomeFragment : Fragment() {
 
 
-    private lateinit var binding:FragmentHomeBinding
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun init() {
-        viewPagerAdapter = ViewPagerAdapter(childFragmentManager,lifecycle)
+        viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
         binding.myViewPager.adapter = viewPagerAdapter
 
         TabLayoutMediator(binding.myTabLayout, binding.myViewPager) { tab, position ->
@@ -109,7 +110,6 @@ class HomeFragment : Fragment() {
                 R.id.menu_saved_messages -> {
                     findNavController().navigate(R.id.chatFragment, bundleOf("user" to userList[0]))
                 }
-
             }
 
             true
@@ -117,7 +117,14 @@ class HomeFragment : Fragment() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        CoroutineScope(Dispatchers.IO).launch {
+            USER.statusTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+            USER.isOnline = "true"
+            FirebaseDatabase.getInstance().getReference("users")
+                .child(FirebaseAuth.getInstance().uid!!).setValue(USER)
+        }
 
-
-
+    }
 }

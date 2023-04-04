@@ -1,18 +1,22 @@
 package com.sultonbek1547.chatapprealtime.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
 import com.sultonbek1547.chatapprealtime.R
-import com.sultonbek1547.chatapprealtime.databinding.ItemReceivedMessageBinding
 import com.sultonbek1547.chatapprealtime.databinding.ItemReceivedMessageGroupBinding
 import com.sultonbek1547.chatapprealtime.databinding.ItemSentMessageBinding
-import com.sultonbek1547.chatapprealtime.models.Message
+import com.sultonbek1547.chatapprealtime.models.MessageText
 import com.sultonbek1547.chatapprealtime.utils.MyData
+import com.sultonbek1547.chatapprealtime.utils.MyData.GROUP
 import com.sultonbek1547.chatapprealtime.utils.MyData.getSenderUser
 
-class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId: String) :
+class GroupChatAdapter(var messageTextList: ArrayList<MessageText>, private val senderId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val SENT_MESSAGE = 1
@@ -34,7 +38,7 @@ class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val message = messageList[position]
+        val message = messageTextList[position]
         when (holder.itemViewType) {
             SENT_MESSAGE -> {
                 val sentHolder = holder as SentMessageViewHolder
@@ -48,11 +52,11 @@ class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId
     }
 
     override fun getItemCount(): Int {
-        return messageList.size
+        return messageTextList.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        val message = messageList[position]
+        val message = messageTextList[position]
         return if (message.senderId == senderId) {
             SENT_MESSAGE
         } else {
@@ -62,32 +66,40 @@ class GroupChatAdapter(var messageList: ArrayList<Message>, private val senderId
 
     class SentMessageViewHolder(private val binding: ItemSentMessageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(message: Message) {
+        fun bind(messageText: MessageText) {
             // Bind the sent message data to the views in the sent message layout using view binding
-            binding.tvMessage.text = message.message
-            binding.tvMessageContent.text = message.date
+            binding.tvMessage.text = messageText.message
+            binding.tvMessageContent.text = messageText.date
             binding.tvMessage.maxWidth = MyData.screenLengthItem
-            if (message.statusRead == "true") {
+            if (messageText.statusRead == "true") {
                 binding.imgMessageStatus.setImageResource(R.drawable.double_checkmark)
-            }else{
+            } else {
                 binding.imgMessageStatus.setImageResource(R.drawable.single_checkmark)
             }
         }
     }
 
-    class ReceivedMessageViewHolder(private val binding: ItemReceivedMessageGroupBinding) :
+    inner class ReceivedMessageViewHolder(private val binding: ItemReceivedMessageGroupBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(message: Message) {
+        fun bind(messageText: MessageText) {
             // Bind the received message data to the views in the received message layout using view binding
-            binding.tvMessage.text   = message.message
-            binding.tvMessageContent.text = message.date
-            val user = getSenderUser(message.senderId!!)
-            Glide.with(itemView.context).load(user.imageLink).into(binding.userImage)
+            binding.tvMessage.text = messageText.message
+            binding.tvMessageContent.text = messageText.date
+            val user = getSenderUser(messageText.senderId!!)
+            Glide.with(itemView.context).load(user.imageLink).into(binding.image)
             binding.tvUserName.text = user.name
+            if (user.isOnline == "true") {
+                binding.onlineImage.visibility = View.VISIBLE
+            }
 
-            if (message.statusRead != "true") {
-                message.statusRead = "true"
-//                MyData.chatReference!!.child(message.id!!).setValue(message)
+            if (messageText.statusRead != "true") {
+                messageText.statusRead = "true"
+                val gson = Gson()
+                messageTextList[position] = messageText
+                GROUP.listMessages = gson.toJson(messageTextList)
+                val database = FirebaseDatabase.getInstance()
+                val reference: DatabaseReference = database.getReference("groups").child(GROUP.id!!)
+                reference.setValue(GROUP)
             }
 
         }

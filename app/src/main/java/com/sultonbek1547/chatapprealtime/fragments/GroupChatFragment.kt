@@ -15,8 +15,9 @@ import com.google.gson.reflect.TypeToken
 import com.sultonbek1547.chatapprealtime.adapters.GroupChatAdapter
 import com.sultonbek1547.chatapprealtime.databinding.FragmentGroupChatBinding
 import com.sultonbek1547.chatapprealtime.models.Group
-import com.sultonbek1547.chatapprealtime.models.Message
+import com.sultonbek1547.chatapprealtime.models.MessageText
 import com.sultonbek1547.chatapprealtime.utils.MyData
+import com.sultonbek1547.chatapprealtime.utils.MyData.GROUP
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,6 +66,7 @@ class GroupChatFragment : Fragment() {
 
     private fun init() {
         group = arguments?.getSerializable("group") as Group
+        GROUP = group
         binding.tvGroupName.text = group.name
         binding.tvGroupMemberCount.text = group.groupMemberCount + " members"
         //Glide.with(binding.toolbar.context).load(user.imageLink).into(binding.userImage)
@@ -108,14 +110,14 @@ class GroupChatFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val group = snapshot.getValue(Group::class.java)
                 val gson = Gson()
-                val listType = object : TypeToken<ArrayList<Message>>() {}.type
-                val list: ArrayList<Message> = gson.fromJson(group?.listMessages, listType)
-                groupChatAdapter.messageList = list
+                val listType = object : TypeToken<ArrayList<MessageText>>() {}.type
+                val list: ArrayList<MessageText> = gson.fromJson(group?.listMessages, listType)
+                groupChatAdapter.messageTextList = list
                 groupChatAdapter.notifyDataSetChanged()
-                if (list.size > 0){
+                if (list.size > 0) {
                     binding.myRv.scrollToPosition(list.size - 1)
 
-                    if (binding.progressBar.visibility == View.VISIBLE ) {
+                    if (binding.progressBar.visibility == View.VISIBLE) {
                         binding.progressBar.visibility = View.INVISIBLE
                     }
                 }
@@ -134,20 +136,20 @@ class GroupChatFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 binding.btnSend.isEnabled = false
             }
-            val message = Message()
+            val messageText = MessageText()
             val key = SimpleDateFormat("dd MM yyyy  HH mm ss SSS").format(Date())
-            message.id = key
-            message.date = SimpleDateFormat("HH:mm").format(Date())
-            message.message = edtMessage
-            message.senderId = USER.uid
-            message.receiverId = USER.uid
-            message.statusRead = "false"
-            message.positon = groupChatAdapter.itemCount.toString()
+            messageText.id = key
+            messageText.date = SimpleDateFormat("HH:mm").format(Date())
+            messageText.message = edtMessage
+            messageText.senderId = USER.uid
+            messageText.receiverId = USER.uid
+            messageText.statusRead = "false"
+            messageText.positon = groupChatAdapter.itemCount.toString()
             val gson = Gson()
-            val listType = object : TypeToken<ArrayList<Message>>() {}.type
-            val messageList: ArrayList<Message> = gson.fromJson(group.listMessages, listType)
-            messageList.add(message)
-            group.listMessages = gson.toJson(messageList)
+            val listType = object : TypeToken<ArrayList<MessageText>>() {}.type
+            val messageTextList: ArrayList<MessageText> = gson.fromJson(group.listMessages, listType)
+            messageTextList.add(messageText)
+            group.listMessages = gson.toJson(messageTextList)
             reference.setValue(group)
 
             withContext(Dispatchers.Main) {
@@ -156,8 +158,6 @@ class GroupChatFragment : Fragment() {
 
             }
         }
-
-
     }
 
 

@@ -21,10 +21,7 @@ import com.sultonbek1547.chatapprealtime.R
 import com.sultonbek1547.chatapprealtime.databinding.FragmentAuthBinding
 import com.sultonbek1547.chatapprealtime.models.User
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
-import com.sultonbek1547.chatapprealtime.utils.MyData.savedMessages
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -111,7 +108,7 @@ class AuthFragment : Fragment() {
                     "true"
                 )
                 reference.child(auth.uid!!).setValue(USER)
-                 Toast.makeText(context, "${user?.displayName}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "${user?.displayName}", Toast.LENGTH_SHORT).show()
 
                 findNavController().navigate(
                     R.id.homeFragment,

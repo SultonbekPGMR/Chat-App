@@ -36,15 +36,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        CoroutineScope(IO).launch {
-            USER.statusTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-            USER.isOnline = "true"
-            FirebaseDatabase.getInstance().getReference("users")
-                .child(FirebaseAuth.getInstance().uid!!).setValue(USER)
-        }
-    }
+
 
     private fun getScreenWidthInPixels(context: Context): Int {
         val displayMetrics = DisplayMetrics()

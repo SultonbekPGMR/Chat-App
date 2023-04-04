@@ -9,7 +9,10 @@ object MyData {
     var screenLengthItem = 1
     var chatReference: DatabaseReference? = null
     var userList = ArrayList<User>()
-    var savedMessages = USER
+    var GROUP = Group()
+
+    var TYPE_TEXT = "text"
+    var TYPE_IMAGE = "image"
 
 
     fun getSenderUser(id:String):User{
