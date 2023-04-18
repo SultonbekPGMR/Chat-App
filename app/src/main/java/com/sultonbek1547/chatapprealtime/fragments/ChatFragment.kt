@@ -24,6 +24,11 @@ import com.sultonbek1547.chatapprealtime.models.Message
 import com.sultonbek1547.chatapprealtime.models.MessageImage
 import com.sultonbek1547.chatapprealtime.models.MessageText
 import com.sultonbek1547.chatapprealtime.models.User
+import com.sultonbek1547.chatapprealtime.models.notification.Data
+import com.sultonbek1547.chatapprealtime.models.notification.MyResponse
+import com.sultonbek1547.chatapprealtime.models.notification.Sender
+import com.sultonbek1547.chatapprealtime.retrofit.ApiClient
+import com.sultonbek1547.chatapprealtime.retrofit.ApiService
 import com.sultonbek1547.chatapprealtime.utils.MyData.TYPE_IMAGE
 import com.sultonbek1547.chatapprealtime.utils.MyData.TYPE_TEXT
 import com.sultonbek1547.chatapprealtime.utils.MyData.USER
@@ -34,6 +39,9 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -46,6 +54,9 @@ class ChatFragment : Fragment() {
     private lateinit var imageReference: StorageReference
     private lateinit var user: User
     private lateinit var chatAdapter: ChatAdapter
+    private val apiService =
+        ApiClient.getRetrofit("https://fcm.googleapis.com/").create(ApiService::class.java)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -200,6 +211,9 @@ class ChatFragment : Fragment() {
 
 
     private fun sendMessage(edtMessage: String) {
+        Toast.makeText(
+            context, USER.name!!, Toast.LENGTH_SHORT
+        ).show()
         CoroutineScope(IO).launch {
             withContext(Main) {
                 binding.btnSend.isEnabled = false
@@ -231,6 +245,33 @@ class ChatFragment : Fragment() {
                 binding.edtMessage.text.clear()
                 binding.btnSend.isEnabled = true
             }
+
+
+            apiService.sendNotification(
+                Sender(
+                    Data(
+                        user.uid!!,
+                        R.drawable.ic_launcher_foreground,
+                        edtMessage,
+                        USER.name!!,
+                        USER.name!!
+
+                    ),
+                    "${user.token}"
+                )
+            ).enqueue(object : Callback<MyResponse> {
+                override fun onResponse(
+                    call: Call<MyResponse>,
+                    response: Response<MyResponse>,
+                ) {
+
+                }
+
+                override fun onFailure(call: Call<MyResponse>, t: Throwable) {
+                }
+            })
+
+
         }
 
 

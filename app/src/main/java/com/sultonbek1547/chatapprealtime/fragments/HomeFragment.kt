@@ -41,6 +41,8 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         init()
 
+
+
         return binding.root
     }
 

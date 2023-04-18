@@ -99,7 +99,6 @@ class ChatAdapter(val messages: ArrayList<Message>, private val senderId: String
                 binding.imageView.visibility = View.VISIBLE
                 Picasso.get().load(message.messageImage!!.imageLink).into(binding.imageView)
 
-
             }
 
 
